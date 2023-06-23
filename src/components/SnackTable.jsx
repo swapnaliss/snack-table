@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Table, Form } from 'react-bootstrap';
 
 const snacks = [
@@ -43,7 +43,21 @@ const snacks = [
 
 
 const SnackTable = () => {
+    const [searchText, setSearchText] = useState('');
 
+    const handleSearch = (e) => {
+        setSearchText(e.target.value.toLowerCase());
+    };
+
+    const filteredSnacks = snacks.filter((snack) => {
+        const { product_name, ingredients } = snack;
+        return (
+            product_name.toLowerCase().includes(searchText) ||
+            ingredients.some((ingredient) => ingredient.toLowerCase().includes(searchText))
+        );
+    });
+
+    console.log(filteredSnacks);
     return (
         <div className="container">
             <h1>Snacks Table</h1>
@@ -51,6 +65,8 @@ const SnackTable = () => {
                 <Form.Control
                     type="text"
                     placeholder="Search by name or ingredients"
+                    value={searchText}
+                    onChange={handleSearch}
                 />
             </Form.Group>
             <Table striped bordered hover>
@@ -77,17 +93,17 @@ const SnackTable = () => {
                     </tr>
                 </thead>
                 <tbody>
-          {snacks.map((snack) => (
-            <tr key={snack.id}>
-              <td>{snack.id}</td>
-              <td>{snack.product_name}</td>
-              <td>{snack.product_weight}</td>
-              <td>{snack.price}</td>
-              <td>{snack.calories}</td>
-              <td>{snack.ingredients.join(', ')}</td>
-            </tr>
-          ))}
-        </tbody>
+                    {filteredSnacks.map((snack) => (
+                        <tr key={snack.id}>
+                            <td>{snack.id}</td>
+                            <td>{snack.product_name}</td>
+                            <td>{snack.product_weight}</td>
+                            <td>{snack.price}</td>
+                            <td>{snack.calories}</td>
+                            <td>{snack.ingredients.join(', ')}</td>
+                        </tr>
+                    ))}
+                </tbody>
             </Table>
         </div>
     );
