@@ -44,6 +44,8 @@ const snacks = [
 
 const SnackTable = () => {
     const [searchText, setSearchText] = useState('');
+    const [sortColumn, setSortColumn] = useState('');
+    const [sortDirection, setSortDirection] = useState('asc');
 
     const handleSearch = (e) => {
         setSearchText(e.target.value.toLowerCase());
@@ -56,6 +58,28 @@ const SnackTable = () => {
             ingredients.some((ingredient) => ingredient.toLowerCase().includes(searchText))
         );
     });
+
+    const handleSort = (column) => {
+        if (sortColumn === column) {
+            setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+        } else {
+            setSortColumn(column);
+            setSortDirection('asc');
+        }
+    };
+
+    const sortedSnacks = filteredSnacks.sort((a, b) => {
+        const columnA = a[sortColumn];
+        const columnB = b[sortColumn];
+        if (columnA < columnB) {
+            return sortDirection === 'asc' ? -1 : 1;
+        }
+        if (columnA > columnB) {
+            return sortDirection === 'asc' ? 1 : -1;
+        }
+        return 0;
+    });
+
 
     console.log(filteredSnacks);
     return (
@@ -72,28 +96,28 @@ const SnackTable = () => {
             <Table striped bordered hover>
                 <thead>
                     <tr>
-                        <th className="clickable">
+                        <th onClick={() => handleSort('id')} className="clickable">
                             ID
                         </th>
-                        <th className="clickable">
+                        <th onClick={() => handleSort('product_name')} className="clickable">
                             Product Name
                         </th>
-                        <th className="clickable">
+                        <th onClick={() => handleSort('product_weight')} className="clickable">
                             Product Weight
                         </th>
-                        <th className="clickable">
+                        <th onClick={() => handleSort('price')} className="clickable">
                             Price
                         </th>
-                        <th className="clickable">
+                        <th onClick={() => handleSort('calories')} className="clickable">
                             Calories
                         </th>
-                        <th className="clickable">
+                        <th onClick={() => handleSort('ingredients')} className="clickable">
                             Ingredients
                         </th>
                     </tr>
                 </thead>
                 <tbody>
-                    {filteredSnacks.map((snack) => (
+                    {sortedSnacks.map((snack) => (
                         <tr key={snack.id}>
                             <td>{snack.id}</td>
                             <td>{snack.product_name}</td>
@@ -107,7 +131,7 @@ const SnackTable = () => {
             </Table>
             {!filteredSnacks.length &&
                 <Alert variant={"danger"}>
-                    Your search - <span style={{"color": "red"}}>{searchText}</span> - did not match any snack.
+                    Your search - <span style={{ "color": "red" }}>{searchText}</span> - did not match any snack.
                 </Alert>
             }
         </div>
