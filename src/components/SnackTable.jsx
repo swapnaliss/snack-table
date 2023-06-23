@@ -76,6 +76,18 @@ const SnackTable = () => {
                         </th>
                     </tr>
                 </thead>
+                <tbody>
+          {snacks.map((snack) => (
+            <tr key={snack.id}>
+              <td>{snack.id}</td>
+              <td>{snack.product_name}</td>
+              <td>{snack.product_weight}</td>
+              <td>{snack.price}</td>
+              <td>{snack.calories}</td>
+              <td>{snack.ingredients.join(', ')}</td>
+            </tr>
+          ))}
+        </tbody>
             </Table>
         </div>
     );
