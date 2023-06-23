@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Table, Form } from 'react-bootstrap';
+import { Table, Form, Alert } from 'react-bootstrap';
 
 const snacks = [
     {
@@ -105,6 +105,11 @@ const SnackTable = () => {
                     ))}
                 </tbody>
             </Table>
+            {!filteredSnacks.length &&
+                <Alert variant={"danger"}>
+                    Your search - <span style={{"color": "red"}}>{searchText}</span> - did not match any snack.
+                </Alert>
+            }
         </div>
     );
 };
